@@ -179,7 +179,7 @@ func (d *DatabaseTransaction) AddTown(town model.Town) error {
 
 func (d *DatabaseTransaction) AddOrUpdateResources(resources model.Resources) error {
 	_, err := d.tx.NamedExec(
-		`INSERT INTO resources VALUES (:character_id, :wood, :stone, :food, :leather) ON CONFLICT DO 
+		`INSERT INTO resources VALUES (:character_id, :wood, :stone, :food, :leather) ON CONFLICT (character_id) DO 
     UPDATE SET stone = :stone, food = :food, leather = :leather, wood = :wood`, resources)
 	return d.handleError(err)
 }
