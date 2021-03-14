@@ -25,7 +25,8 @@ type allBuildingsRow struct {
 
 func (d *DatabaseTransaction) AddOrUpdateProductionRates(rates model.Resources) error {
 	_, err := d.tx.NamedExec(
-		`INSERT INTO production_rates VALUES (:character_id, :wood, :leather, :stone, :food) ON CONFLICT DO 
+		`INSERT INTO production_rates VALUES (:character_id, :wood, :leather, :stone, :food) 
+    ON CONFLICT (character_id) DO 
     UPDATE SET wood=:wood, leather=:leather, food=:food, stone=:stone`, rates)
 	return d.handleError(err)
 }
