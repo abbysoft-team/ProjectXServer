@@ -255,12 +255,15 @@ func (d *DatabaseTransaction) UpdateCharacter(character model.Character) error {
 		return d.handleError(err)
 	}
 
-	if err := d.AddOrUpdateResources(character.Resources); err != nil {
-		return d.handleError(err)
+	if err = d.AddOrUpdateResources(character.Resources); err != nil {
+		return fmt.Errorf("failed to update character resources: %w", err)
 	}
 
-	err = d.AddOrUpdateProductionRates(character.ProductionRate)
-	return d.handleError(err)
+	if err = d.AddOrUpdateProductionRates(character.ProductionRate); err != nil {
+		return fmt.Errorf("failed to update character production rate: %w", err)
+	}
+
+	return nil
 }
 
 func (d *DatabaseTransaction) GetCharacters(accountID int64) (result []model.Character, err error) {
