@@ -19,3 +19,6 @@ Normalize = false
 [logic]
 #AfkTimeout = "15m"
 #ChatMessageMaxLength = 200
+
+# Print very verbose logging on terrain generation and querries
+DebugTerrain = false

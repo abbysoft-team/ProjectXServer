@@ -3,18 +3,22 @@ package tests
 import (
 	rpc "abbysoft/gardarike-online/rpc/generated"
 	"github.com/stretchr/testify/assert"
+	"math/rand"
 	"testing"
+	"time"
 )
 
 func TestGetWorldMap(t *testing.T) {
 	TestLoginSuccessful(t)
 
+	rand.Seed(time.Now().UnixNano())
+
 	var request rpc.Request
 	request.Data = &rpc.Request_GetWorldMapRequest{
 		GetWorldMapRequest: &rpc.GetWorldMapRequest{
 			Location: &rpc.IntVector2D{
-				X: 2,
-				Y: 2,
+				X: int32(rand.Intn(100) - 50),
+				Y: int32(rand.Intn(100) - 50),
 			},
 			SessionID: sessionID,
 		},

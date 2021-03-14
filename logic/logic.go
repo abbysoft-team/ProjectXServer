@@ -47,6 +47,7 @@ type Config struct {
 	WaterLevel           float32
 	ChunkSize            int
 	AlwaysRegenerateMap  bool
+	DebugTerrain         bool
 }
 
 func NewLogic(generator generation.TerrainGenerator, eventsChan chan model.EventWrapper, dbConfig postgres.Config, config Config) (*SimpleLogic, error) {

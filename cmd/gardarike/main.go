@@ -31,6 +31,7 @@ func setupDefaults() {
 	viper.SetDefault("logic.WaterLevel", consts.DefaultWaterLevel)
 	viper.SetDefault("logic.ChunkSize", consts.DefaultMapChunkSize)
 	viper.SetDefault("logic.AlwaysRegenerateMap", consts.DefaultAlwaysRegenerateMap)
+	viper.SetDefault("logic.DebugTerrain", consts.DefaultDebugTerrain)
 }
 
 func setupConfig() error {

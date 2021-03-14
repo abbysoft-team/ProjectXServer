@@ -31,6 +31,14 @@ func (s *SimpleLogic) generateAndSaveMapChunk(x, y int, session *PlayerSession) 
 		float64(s.config.ChunkSize*x),
 		float64(s.config.ChunkSize*y))
 
+	if s.config.DebugTerrain {
+		s.log.WithFields(log.Fields{
+			"locationX": x,
+			"locationY": y,
+			"data":      terrain,
+		}).Debugf("Chunk generated")
+	}
+
 	chunk := rpc.WorldMapChunk{
 		X:          int32(x),
 		Y:          int32(y),
@@ -89,6 +97,13 @@ func (s *SimpleLogic) GetWorldMap(session *PlayerSession, request *rpc.GetWorldM
 		return newChunk()
 	}
 
+	if s.config.DebugTerrain {
+		s.log.WithFields(log.Fields{
+			"location": *request.Location,
+			"data":     chunk.Data,
+		}).Debugf("Return existing chunk")
+	}
+
 	rpcChunk, err := chunk.ToRPC()
 	if err != nil {
 		s.log.WithError(err).Error("Failed to convert map chunk to the rpc chunk")
@@ -108,6 +123,13 @@ func (s *SimpleLogic) GetWorldMap(session *PlayerSession, request *rpc.GetWorldM
 
 	for _, town := range towns {
 		rpcChunk.Towns = append(rpcChunk.Towns, town.ToRPC())
+	}
+
+	if s.config.DebugTerrain {
+		s.log.WithFields(log.Fields{
+			"location": *request.Location,
+			"data":     rpcChunk.Data,
+		}).Debugf("Chunk after converting to rpc")
 	}
 
 	return &rpc.GetWorldMapResponse{Map: rpcChunk}, nil
