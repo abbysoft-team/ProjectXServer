@@ -51,6 +51,8 @@ func NewServer(
 	logger := log.WithField("module", "server")
 
 	eventsChan := make(chan model.EventWrapper, 10)
+
+	generatorConfig.Debug = logicConfig.DebugTerrain
 	gameLogic, err := logic.NewLogic(
 		generation.NewSimplexTerrainGenerator(generatorConfig, time.Now().UnixNano()),
 		eventsChan,

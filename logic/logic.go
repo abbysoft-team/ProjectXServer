@@ -51,6 +51,11 @@ type Config struct {
 }
 
 func NewLogic(generator generation.TerrainGenerator, eventsChan chan model.EventWrapper, dbConfig postgres.Config, config Config) (*SimpleLogic, error) {
+	logrus.WithFields(logrus.Fields{
+		"module": "logic",
+		"config": config,
+	}).Info("Initializing logic")
+
 	database, err := postgres.NewDatabase(dbConfig)
 	if err != nil {
 		return nil, fmt.Errorf("failed to init db: %w", err)

@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	version = "0.2.0"
+	version = "0.2.1"
 )
 
 var (
@@ -122,7 +122,7 @@ func main() {
 	}
 
 	setupLogging()
-	log.Printf("ProjectX UDPServer v%s", version)
+	log.Printf("GardarikeOnline server v%s", version)
 
 	if err := setupConfig(); err != nil {
 		log.WithError(err).Fatal("Failed to init configuration")

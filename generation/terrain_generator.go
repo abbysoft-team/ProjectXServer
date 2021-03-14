@@ -21,11 +21,13 @@ type TerrainGeneratorConfig struct {
 	Persistence float64
 	ScaleFactor float64
 	Normalize   bool
+	Debug       bool
 }
 
 func NewSimplexTerrainGenerator(config TerrainGeneratorConfig, seed int64) *SimplexTerrainGenerator {
 	log.WithField("module", "terrain_generator").
 		WithField("config", config).
+		WithField("seed", seed).
 		Info("Simplex terrain generator initialized")
 
 	return &SimplexTerrainGenerator{
@@ -43,10 +45,12 @@ func (s SimplexTerrainGenerator) GenerateTerrain(width, height int, offsetX, off
 	maxNoise := 0.0
 	minNoise := 0.0
 
+	finishChan := make(chan interface{}, width)
 	for x := 0; x < width; x++ {
 		pixels[x] = make([]float64, height)
 
 		x := x
+
 		go func() {
 			for y := 0; y < height; y++ {
 				noise := 0.0
@@ -60,28 +64,51 @@ func (s SimplexTerrainGenerator) GenerateTerrain(width, height int, offsetX, off
 					nx := (float64(x) + offsetX) / float64(width)
 					ny := (float64(y) + offsetY) / float64(height)
 
-					// Multiply by amplitude and map noise value from [-1;1] to [0;1]
-					noise += amplitude * (s.generator.Eval2(nx*freq, ny*freq))
+					noiseVal := s.generator.Eval2(nx*freq, ny*freq)
+					if s.config.Debug {
+						log.WithFields(log.Fields{
+							"module":    "terrain_generator",
+							"noise":     noiseVal,
+							"x":         x,
+							"y":         y,
+							"amplitude": amplitude,
+							"freq":      freq,
+							"nx":        nx,
+							"ny":        ny,
+							"octave":    octave,
+						}).Debugf("Nose generated")
+					}
+
+					noise += amplitude * noiseVal
 				}
 
 				pixels[x][y] = noise
 			}
+
+			finishChan <- true
 		}()
 	}
 
+	// Wait all routines to complete
+	for i := 0; i < width; i++ {
+		<-finishChan
+	}
+
 	//Calculate min/max noise
-	for x := 0; x < width; x++ {
-		for y := 0; y < height; y++ {
-			noise := pixels[x][y]
-			maxNoise = math.Max(noise, maxNoise)
-			minNoise = math.Min(noise, minNoise)
+	if s.config.Normalize {
+		for x := 0; x < width; x++ {
+			for y := 0; y < height; y++ {
+				noise := pixels[x][y]
+				maxNoise = math.Max(noise, maxNoise)
+				minNoise = math.Min(noise, minNoise)
+			}
 		}
 	}
 
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
 			var normalized float64
-			if s.config.Normalize {
+			if s.config.Normalize && maxNoise != minNoise {
 				normalized = (pixels[x][y] - minNoise) / (maxNoise - minNoise)
 			} else {
 				normalized = pixels[x][y]
