@@ -147,6 +147,15 @@ func (p *PacketHandler) getHandleFunc(request rpc.Request) *requestHandler {
 				},
 			}, err
 		}
+	} else if request.GetGetEmpiresRatingRequest() != nil {
+		handler.handleFunc = func(s *PlayerSession, r rpc.Request) (rpc.Response, model.Error) {
+			response, err := p.logic.GetEmpiresRating(s, r.GetGetEmpiresRatingRequest())
+			return rpc.Response{
+				Data: &rpc.Response_GetEmpiresRatingResponse{
+					GetEmpiresRatingResponse: response,
+				},
+			}, err
+		}
 	} else {
 		return nil
 	}

@@ -19,6 +19,8 @@ const (
 
 var client *Client
 var sessionID string
+var characterName string
+var characterID int64
 
 func TestMain(m *testing.M) {
 	testClient, err := NewClient(ClientConfig{

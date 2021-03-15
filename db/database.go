@@ -2,6 +2,7 @@ package db
 
 import (
 	"abbysoft/gardarike-online/model"
+	rpc "abbysoft/gardarike-online/rpc/generated"
 )
 
 type CharacterDatabaseTransaction interface {
@@ -13,6 +14,8 @@ type CharacterDatabaseTransaction interface {
 	UpdateCharacter(character model.Character) error
 	GetResources(characterID int64) (model.Resources, error)
 	GetProductionRates(characterID int64) (model.Resources, error)
+	GetEmpiresByCriteria(
+		characterName string, offset, limit uint32, criteria rpc.EmpiresRatingCriteria) ([]*rpc.RatingEntry, *rpc.RatingEntry, error)
 }
 
 type AccountDatabaseTransaction interface {

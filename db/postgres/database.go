@@ -23,6 +23,38 @@ type allBuildingsRow struct {
 	Count       uint64 `db:"count"`
 }
 
+func (d *DatabaseTransaction) GetEmpiresByCriteria(characterName string, offset, limit uint32, criteria rpc.EmpiresRatingCriteria) (
+	entries []*rpc.RatingEntry, playerEntry *rpc.RatingEntry, err error) {
+	var columnName string
+	if criteria == rpc.EmpiresRatingCriteria_POPULATION {
+		columnName = "current_population"
+	} else {
+		return nil, nil, fmt.Errorf("invalid criteria")
+	}
+
+	if limit == 0 {
+		limit = 10
+	}
+
+	preparedQuery := fmt.Sprintf(`(SELECT name as empireName, %s as value, row_number() OVER (ORDER BY %s DESC) as position FROM characters ORDER BY value DESC OFFSET %d LIMIT %d)
+UNION
+(SELECT empireName, value, position FROM (SELECT name as empireName, %s as value, row_number() OVER (ORDER BY %s DESC) as position FROM characters) as ir WHERE empireName=$1)
+ORDER BY position`, columnName, columnName, offset, limit, columnName, columnName)
+
+	if err = d.tx.Select(&entries, preparedQuery, characterName); err != nil {
+		return nil, nil, d.handleError(err)
+	}
+
+	// If the last entry is a player entry and there are more entries than limit
+	// set the last item as a current player entry
+	if len(entries) > int(limit) && (entries[len(entries)-1].EmpireName == characterName) {
+		playerEntry = entries[len(entries)-1]
+		entries = entries[:len(entries)-2]
+	}
+
+	return entries, playerEntry, d.handleError(err)
+}
+
 func (d *DatabaseTransaction) AddOrUpdateProductionRates(rates model.Resources) error {
 	_, err := d.tx.NamedExec(
 		`INSERT INTO production_rates VALUES (:character_id, :wood, :leather, :stone, :food) 

@@ -51,4 +51,7 @@ func TestSelectCharacter(t *testing.T) {
 
 	require.NotNil(t, event.GetChatMessageEvent())
 	require.Equal(t, event.GetChatMessageEvent().Message.Type, rpc.ChatMessage_SYSTEM)
+
+	characterID = 5
+	characterName = "test"
 }

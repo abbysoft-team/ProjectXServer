@@ -16,6 +16,7 @@ service GameServer {
   rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse);
   rpc CreateEmpire(CreateCharacterRequest) returns (CreateCharacterResponse);
   rpc PlaceBuilding(PlaceBuildingRequest) returns (PlaceBuildingResponse);
+  rpc GetEmpiresRating(GetEmpiresRatingRequest) returns (GetEmpiresRatingResponse);
 }
 
 // Requests
@@ -33,7 +34,19 @@ message Request {
     CreateCharacterRequest createCharacterRequest = 10;
     GetResourcesRequest getResourcesRequest = 11;
     PlaceBuildingRequest placeBuildingRequest = 12;
+    GetEmpiresRatingRequest getEmpiresRatingRequest = 13;
   }
+}
+
+enum EmpiresRatingCriteria {
+  POPULATION = 0;
+}
+
+message GetEmpiresRatingRequest {
+  string sessionID = 1;
+  EmpiresRatingCriteria criteria = 2;
+  uint32 offset = 3;
+  uint32 limit = 4;
 }
 
 enum BuildingType {
@@ -124,7 +137,19 @@ message Response {
     CreateCharacterResponse createCharacterResponse = 13;
     GetResourcesResponse getResourcesResponse = 14;
     PlaceBuildingResponse placeBuildingResponse = 15;
+    GetEmpiresRatingResponse getEmpiresRatingResponse = 16;
   }
+}
+
+message RatingEntry {
+  uint64 position = 1;
+  string empireName = 2;
+  uint64 value = 3;
+}
+
+message GetEmpiresRatingResponse {
+  repeated RatingEntry entries = 1;
+  RatingEntry playerRating = 2;
 }
 
 message PlaceBuildingResponse {
