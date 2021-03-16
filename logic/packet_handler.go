@@ -182,7 +182,13 @@ func (p *PacketHandler) HandleClientPacket(data []byte) *rpc.Response {
 		return &response
 	}
 
-	requestName := strings.Split(fmt.Sprintf("%T", request.Data), "_")[1]
+	var requestName string
+
+	requestNameParts := strings.Split(fmt.Sprintf("%T", request.Data), "_")
+	if len(requestNameParts) < 2 {
+		p.log.Errorf("Failed to process packet: wrong request name: %T", request.Data)
+		requestName = requestNameParts[1]
+	}
 
 	var sessionID string
 	var authorized bool
