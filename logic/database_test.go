@@ -3,6 +3,7 @@ package logic
 import (
 	"abbysoft/gardarike-online/db"
 	"abbysoft/gardarike-online/model"
+	rpc "abbysoft/gardarike-online/rpc/generated"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/mock"
 )
@@ -46,6 +47,10 @@ func (t *TerrainGeneratorMock) SetSeed(seed int64) {
 type DatabaseTransactionMock struct {
 	mock.Mock
 	isCompleted bool
+}
+
+func (d *DatabaseTransactionMock) GetEmpiresByCriteria(characterName string, offset, limit uint32, criteria rpc.EmpiresRatingCriteria) ([]*rpc.RatingEntry, *rpc.RatingEntry, error) {
+	panic("implement me")
 }
 
 func (d *DatabaseTransactionMock) GetProductionRates(characterID int64) (model.Resources, error) {
