@@ -79,6 +79,8 @@ func (s SimplexTerrainGenerator) GenerateTerrain(width, height int, offsetX, off
 						}).Debugf("Nose generated")
 					}
 
+					// Map noise from [-1;1] to [0;1)
+					noiseVal = (noiseVal + 1.0) / 2.0
 					noise += amplitude * noiseVal
 				}
 
