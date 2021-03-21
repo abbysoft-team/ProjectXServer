@@ -38,6 +38,7 @@ type WorldDatabaseTransaction interface {
 	AddTown(town model.Town) error
 	AddTownBuilding(townID int64, building model.Building) error
 	GetAllBuildings() (map[int64]model.CharacterBuildings, error)
+	RenameTown(townID int64, newName string) error
 }
 
 type DatabaseTransaction interface {

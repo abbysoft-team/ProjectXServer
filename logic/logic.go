@@ -30,6 +30,7 @@ type Logic interface {
 	PlaceTown(session *PlayerSession, request *rpc.PlaceTownRequest) (*rpc.PlaceTownResponse, model.Error)
 	PlaceBuilding(session *PlayerSession, request *rpc.PlaceBuildingRequest) (*rpc.PlaceBuildingResponse, model.Error)
 	GetEmpiresRating(session *PlayerSession, request *rpc.GetEmpiresRatingRequest) (*rpc.GetEmpiresRatingResponse, model.Error)
+	RenameTown(session *PlayerSession, request *rpc.RenameTownRequest) (*rpc.RenameTownResponse, model.Error)
 }
 
 type SimpleLogic struct {

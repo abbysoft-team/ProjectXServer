@@ -156,6 +156,15 @@ func (p *PacketHandler) getHandleFunc(request rpc.Request) *requestHandler {
 				},
 			}, err
 		}
+	} else if request.GetRenameTownRequest() != nil {
+		handler.handleFunc = func(s *PlayerSession, r rpc.Request) (rpc.Response, model.Error) {
+			response, err := p.logic.RenameTown(s, r.GetRenameTownRequest())
+			return rpc.Response{
+				Data: &rpc.Response_RenameTownResponse{
+					RenameTownResponse: response,
+				},
+			}, err
+		}
 	} else {
 		return nil
 	}

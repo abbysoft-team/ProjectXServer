@@ -55,6 +55,11 @@ ORDER BY position`, columnName, columnName, offset, limit, columnName, columnNam
 	return entries, playerEntry, d.handleError(err)
 }
 
+func (d *DatabaseTransaction) RenameTown(townID int64, newName string) error {
+	_, err := d.tx.Exec(`UPDATE towns SET name=$1 WHERE id=$2`, newName, townID)
+	return d.handleError(err)
+}
+
 func (d *DatabaseTransaction) AddOrUpdateProductionRates(rates model.Resources) error {
 	_, err := d.tx.NamedExec(
 		`INSERT INTO production_rates VALUES (:character_id, :wood, :leather, :stone, :food) 

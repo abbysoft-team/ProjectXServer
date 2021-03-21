@@ -17,6 +17,7 @@ service GameServer {
   rpc CreateEmpire(CreateCharacterRequest) returns (CreateCharacterResponse);
   rpc PlaceBuilding(PlaceBuildingRequest) returns (PlaceBuildingResponse);
   rpc GetEmpiresRating(GetEmpiresRatingRequest) returns (GetEmpiresRatingResponse);
+  rpc RenameTown(RenameTownRequest) returns (RenameTownResponse);
 }
 
 // Requests
@@ -35,7 +36,14 @@ message Request {
     GetResourcesRequest getResourcesRequest = 11;
     PlaceBuildingRequest placeBuildingRequest = 12;
     GetEmpiresRatingRequest getEmpiresRatingRequest = 13;
+    RenameTownRequest renameTownRequest = 14;
   }
+}
+
+message RenameTownRequest {
+  string sessionID = 1;
+  int64 townID = 2;
+  string newName = 3;
 }
 
 enum EmpiresRatingCriteria {
@@ -138,6 +146,7 @@ message Response {
     GetResourcesResponse getResourcesResponse = 14;
     PlaceBuildingResponse placeBuildingResponse = 15;
     GetEmpiresRatingResponse getEmpiresRatingResponse = 16;
+    RenameTownResponse renameTownResponse = 17;
   }
 }
 
@@ -321,4 +330,8 @@ enum Error {
   FORBIDDEN = 9;
   NOT_ENOUGH_RESOURCES = 10;
   TOWN_NOT_FOUND = 11;
+}
+
+message RenameTownResponse {
+
 }
