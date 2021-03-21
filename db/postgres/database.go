@@ -188,11 +188,37 @@ func (d *DatabaseTransaction) handleError(err error) error {
 	return err
 }
 
-func (d *DatabaseTransaction) IncrementMapResources(resources model.ChunkResources) error {
-	_, err := d.tx.NamedExec(
-		"UPDATE chunks SET stones = stones + :stones, trees = trees + :trees, animals = animals + :animals, plants = plants + :plants",
-		resources)
+type incrementMapResources struct {
+	Inc   model.ChunkResources
+	Limit model.ChunkResources
+}
 
+func (d *DatabaseTransaction) IncrementMapResources(resources model.ChunkResources, limit model.ChunkResources) error {
+
+	_, err := d.tx.NamedExec(`
+UPDATE chunks SET stones = stones + :inc.stones 
+WHERE stones < :limit.stones`, incrementMapResources{Limit: limit, Inc: resources})
+	if err != nil {
+		return d.handleError(err)
+	}
+
+	_, err = d.tx.NamedExec(`
+UPDATE chunks SET trees = chunks.trees + :inc.trees 
+WHERE trees < :limit.trees`, incrementMapResources{Limit: limit, Inc: resources})
+	if err != nil {
+		return d.handleError(err)
+	}
+
+	_, err = d.tx.NamedExec(`
+UPDATE chunks SET animals = animals + :inc.animals 
+WHERE animals < :limit.animals`, incrementMapResources{Limit: limit, Inc: resources})
+	if err != nil {
+		return d.handleError(err)
+	}
+
+	_, err = d.tx.NamedExec(`
+UPDATE chunks SET plants = chunks.plants + :inc.plants 
+WHERE plants < :limit.plants`, incrementMapResources{Limit: limit, Inc: resources})
 	return d.handleError(err)
 }
 

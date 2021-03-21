@@ -36,7 +36,7 @@ func (r *ResourceManager) Update() {
 		return
 	}
 
-	if err := tx.IncrementMapResources(resourceIncrementValue); err != nil {
+	if err := tx.IncrementMapResources(resourceIncrementValue, model.ChunkResourcesLimit); err != nil {
 		r.logger.WithError(err).Error("Failed to increment map resources")
 	}
 }

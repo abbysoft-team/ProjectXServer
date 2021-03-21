@@ -14,4 +14,11 @@ var (
 		Stone:   2000,
 		Leather: 2000,
 	}
+
+	ChunkResourcesLimit = ChunkResources{
+		Trees:   200,
+		Stones:  200,
+		Animals: 200,
+		Plants:  200,
+	}
 )
