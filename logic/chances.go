@@ -17,9 +17,5 @@ func CheckRandomEventHappened(chance float32) bool {
 	n := rand.Int63n(10e10)
 	chance *= 10e8
 
-	if n >= int64(chance) {
-		return false
-	}
-
-	return true
+	return n < int64(chance)
 }

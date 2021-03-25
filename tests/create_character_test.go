@@ -5,9 +5,10 @@ package tests
 import (
 	rpc "abbysoft/gardarike-online/rpc/generated"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateCharacter(t *testing.T) {

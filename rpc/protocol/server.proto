@@ -67,6 +67,7 @@ message PlaceBuildingRequest {
   BuildingType buildingID = 2;
   int64 townID = 3;
   Vector2D location = 4;
+  Vector2D rotation = 5;
 }
 
 message GetResourcesRequest {
@@ -89,6 +90,7 @@ message PlaceTownRequest {
   string sessionID = 1;
   Vector2D location = 2;
   string name = 3;
+  Vector2D rotation = 4;
 }
 
 message GetWorkDistributionRequest {
@@ -295,11 +297,13 @@ message Town {
   string ownerName = 4;
   uint64 population = 5;
   int64  id = 6;
+  Vector2D rotation = 7;
 }
 
 message Building {
   int64 id = 1;
   Vector3D location = 2;
+  Vector2D rotation = 3;
 }
 
 message GetLocalMapResponse {

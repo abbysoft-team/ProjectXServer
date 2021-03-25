@@ -44,6 +44,29 @@ func (c ChatMessage) ToRPC() *rpc.ChatMessage {
 	}
 }
 
+type Vector2D struct {
+	X float32
+	Y float32
+}
+
+func ToModelVector(vec *rpc.Vector2D) Vector2D {
+	if vec == nil {
+		return Vector2D{}
+	}
+
+	return Vector2D{
+		X: vec.X,
+		Y: vec.Y,
+	}
+}
+
+func (v Vector2D) ToRPC() *rpc.Vector2D {
+	return &rpc.Vector2D{
+		X: v.X,
+		Y: v.Y,
+	}
+}
+
 type Town struct {
 	ID         int64
 	X          int64
@@ -52,6 +75,7 @@ type Town struct {
 	Population uint64
 	Name       string
 	Buildings  []Building
+	Rotation   Vector2D
 }
 
 func (t Town) ToRPC() *rpc.Town {
@@ -62,6 +86,7 @@ func (t Town) ToRPC() *rpc.Town {
 		Name:       t.Name,
 		OwnerName:  t.OwnerName,
 		Population: t.Population,
+		Rotation:   t.Rotation.ToRPC(),
 	}
 }
 

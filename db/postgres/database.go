@@ -5,6 +5,7 @@ import (
 	"abbysoft/gardarike-online/model"
 	rpc "abbysoft/gardarike-online/rpc/generated"
 	"fmt"
+
 	"github.com/jmoiron/sqlx"
 	pq "github.com/lib/pq"
 )
@@ -237,7 +238,7 @@ func (d *DatabaseTransaction) GetTownsForRect(xStart, xEnd, yStart, yEnd int) (r
 
 func (d *DatabaseTransaction) AddTown(town model.Town) error {
 	_, err := d.tx.NamedExec(
-		`INSERT INTO towns VALUES (DEFAULT, :x, :y, :name, :owner_name, :population)`, town)
+		`INSERT INTO towns VALUES (DEFAULT, :x, :y, :name, :owner_name, :population, :rotation.x, :rotation.y)`, town)
 	return d.handleError(err)
 }
 

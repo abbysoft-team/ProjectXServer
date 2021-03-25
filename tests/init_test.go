@@ -3,10 +3,11 @@
 package tests
 
 import (
-	log "github.com/sirupsen/logrus"
 	"os"
 	"testing"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const (

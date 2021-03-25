@@ -2,24 +2,13 @@ package model
 
 import rpc "abbysoft/gardarike-online/rpc/generated"
 
-type Location2D struct {
-	X float32
-	Y float32
-}
-
-func LocationFromRPC(d *rpc.Vector2D) Location2D {
-	return Location2D{
-		X: d.X,
-		Y: d.Y,
-	}
-}
-
 type Building struct {
 	ID              rpc.BuildingType
 	Name            string
 	Cost            Resources
 	Production      Resources
-	Location        Location2D
+	Location        Vector2D
+	Rotation        Vector2D
 	PopulationBonus uint64
 }
 

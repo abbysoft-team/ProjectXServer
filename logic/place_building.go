@@ -3,6 +3,7 @@ package logic
 import (
 	"abbysoft/gardarike-online/model"
 	rpc "abbysoft/gardarike-online/rpc/generated"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -24,7 +25,7 @@ func (s *SimpleLogic) PlaceBuilding(session *PlayerSession, request *rpc.PlaceBu
 		return nil, model.ErrTownNotFound
 	}
 
-	building.Location = model.LocationFromRPC(request.Location)
+	building.Location = model.ToModelVector(request.Location)
 	if err := session.Tx.AddTownBuilding(request.TownID, building); err != nil {
 		s.log.WithError(err).Error("Failed to add town building")
 		return nil, model.ErrInternalServerError

@@ -4,6 +4,7 @@ import (
 	"abbysoft/gardarike-online/db"
 	"abbysoft/gardarike-online/model"
 	rpc "abbysoft/gardarike-online/rpc/generated"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/mock"
 )
@@ -107,11 +108,15 @@ func (d *DatabaseMock) BeginTransaction(autoCommit bool, autoRollBack bool) (db.
 	return d, nil
 }
 
+func (d *DatabaseTransactionMock) RenameTown(townID int64, newName string) error {
+	panic("implement me")
+}
+
 func (d *DatabaseTransactionMock) GetChunkRange() (model.ChunkRange, error) {
 	panic("implement me")
 }
 
-func (d *DatabaseTransactionMock) IncrementMapResources(resources model.ChunkResources) error {
+func (d *DatabaseTransactionMock) IncrementMapResources(resources model.ChunkResources, limit model.ChunkResources) error {
 	panic("implement me")
 }
 

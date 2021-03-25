@@ -1,3 +1,5 @@
 .idea/
 *.pb.go
 configs/config.toml
+.vscode/
+cmd/gardarike/__*

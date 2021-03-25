@@ -55,13 +55,13 @@ func (s *SimpleLogic) updateSessions() {
 // startGameLoop - runs endless game loop
 func (s *SimpleLogic) startGameLoop() {
 	go func() {
-		for _ = range time.Tick(5 * time.Second) {
+		for range time.Tick(5 * time.Second) {
 			s.updateSessions()
 		}
 	}()
 
 	go func() {
-		for _ = range time.Tick(time.Minute) {
+		for range time.Tick(time.Minute) {
 			s.resourceManager.Update()
 		}
 	}()
