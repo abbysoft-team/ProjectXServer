@@ -2,10 +2,11 @@ package tests
 
 import (
 	rpc "abbysoft/gardarike-online/rpc/generated"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func requireEvent(t *testing.T, timeout time.Duration) *rpc.Event {
@@ -28,7 +29,7 @@ func TestSelectCharacter(t *testing.T) {
 	var request rpc.Request
 	request.Data = &rpc.Request_SelectCharacterRequest{
 		SelectCharacterRequest: &rpc.SelectCharacterRequest{
-			CharacterID: 5,
+			CharacterID: 1,
 			SessionID:   sessionID,
 		},
 	}

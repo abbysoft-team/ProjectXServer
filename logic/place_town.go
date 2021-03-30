@@ -6,8 +6,9 @@ import (
 	"abbysoft/gardarike-online/model/consts"
 	rpc "abbysoft/gardarike-online/rpc/generated"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"math/rand"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // canPlaceTown - checks if the character can place one more town.
@@ -45,6 +46,7 @@ func (s *SimpleLogic) PlaceTown(
 		"sessionID": session.SessionID,
 		"location":  request.Location,
 		"name":      request.Name,
+		"rotation":  request.Rotation,
 	}).Info("PlaceTown")
 
 	isFirstTown := len(session.SelectedCharacter.Towns) == 0
@@ -96,6 +98,7 @@ func (s *SimpleLogic) PlaceTown(
 		OwnerName:  session.SelectedCharacter.Name,
 		Population: 0,
 		Name:       request.Name,
+		Rotation:   request.Rotation,
 	}
 
 	if err := tx.AddTown(town); err != nil {
