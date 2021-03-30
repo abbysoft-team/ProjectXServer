@@ -98,7 +98,7 @@ func (s *SimpleLogic) PlaceTown(
 		OwnerName:  session.SelectedCharacter.Name,
 		Population: 0,
 		Name:       request.Name,
-		Rotation:   model.ToModelVector(request.Rotation),
+		Rotation:   request.Rotation,
 	}
 
 	if err := tx.AddTown(town); err != nil {

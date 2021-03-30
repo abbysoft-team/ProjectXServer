@@ -14,6 +14,7 @@ func TestSimpleLogic_PlaceTown_FirstTown(t *testing.T) {
 	request := &rpc.PlaceTownRequest{
 		SessionID: "sessionID",
 		Name:      "TestTown",
+		Rotation:  25.4,
 	}
 
 	session.SelectedCharacter = &model.Character{
@@ -24,7 +25,7 @@ func TestSimpleLogic_PlaceTown_FirstTown(t *testing.T) {
 
 	db.On("AddTown", mock.MatchedBy(func(town model.Town) bool {
 		return town.OwnerName == session.SelectedCharacter.Name &&
-			town.Name == request.Name
+			town.Name == request.Name && town.Rotation == request.Rotation
 	}), mock.Anything).Return(nil)
 
 	db.On("UpdateCharacter", mock.MatchedBy(func(character model.Character) bool {

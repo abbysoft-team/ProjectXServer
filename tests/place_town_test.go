@@ -15,8 +15,9 @@ func TestPlaceTown(t *testing.T) {
 	request.Data = &rpc.Request_PlaceTownRequest{
 		PlaceTownRequest: &rpc.PlaceTownRequest{
 			SessionID: sessionID,
-			Location:  nil,
+			Location:  &rpc.Vector2D{X: 1.0, Y: 5.0},
 			Name:      fmt.Sprintf("test-town-%d", time.Now().Unix()),
+			Rotation:  25.0,
 		},
 	}
 

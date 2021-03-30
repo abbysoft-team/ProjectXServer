@@ -75,7 +75,7 @@ type Town struct {
 	Population uint64
 	Name       string
 	Buildings  []Building
-	Rotation   Vector2D
+	Rotation   float32
 }
 
 func (t Town) ToRPC() *rpc.Town {
@@ -86,7 +86,7 @@ func (t Town) ToRPC() *rpc.Town {
 		Name:       t.Name,
 		OwnerName:  t.OwnerName,
 		Population: t.Population,
-		Rotation:   t.Rotation.ToRPC(),
+		Rotation:   t.Rotation,
 	}
 }
 

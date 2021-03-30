@@ -68,7 +68,8 @@ func (d *DatabaseTransactionMock) AddOrUpdateProductionRates(rates model.Resourc
 }
 
 func (d *DatabaseTransactionMock) AddTownBuilding(townID int64, building model.Building) error {
-	panic("implement me")
+	args := d.Called(townID, building)
+	return args.Error(0)
 }
 
 func (d *DatabaseTransactionMock) GetAllBuildings() (map[int64]model.CharacterBuildings, error) {

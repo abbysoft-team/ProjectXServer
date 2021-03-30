@@ -8,7 +8,7 @@ type Building struct {
 	Cost            Resources
 	Production      Resources
 	Location        Vector2D
-	Rotation        Vector2D
+	Rotation        float32
 	PopulationBonus uint64
 }
 
