@@ -115,8 +115,10 @@ message GetWorldMapRequest {
   IntVector2D location = 2;
 }
 
+// GetLocalMap - returns local terrain data near the location
 message GetLocalMapRequest {
   string sessionID = 1;
+  Vector2D location = 2;
 }
 
 message LoginRequest {
@@ -269,8 +271,18 @@ message IntVector2D {
 }
 
 // Local map is a map of a concrete village
-message LocalMap {
-  repeated Building buildings = 4;
+message LocalMapChunk {
+  // Coords of the global chunk that contains the local chunk
+  IntVector2D globalChunkCoords = 1;
+
+  // Global chunks divided to 4 local chunks
+  // [1][2]
+  // [3][4]
+  int32 localChunkNumber = 2;
+
+  repeated float data = 3;
+  int32 width = 4;
+  int32 height = 5;
 }
 
 message WorldMapChunk {
@@ -307,7 +319,7 @@ message Building {
 }
 
 message GetLocalMapResponse {
-  LocalMap map = 1;
+  LocalMapChunk map = 1;
 }
 
 message GetWorldMapResponse {

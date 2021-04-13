@@ -24,10 +24,9 @@ func (s *SimpleLogic) getMapChunkHeightAt(chunk *rpc.WorldMapChunk, x, y int) fl
 }
 
 func (s *SimpleLogic) getMapChunkAt(x, y int, tx db.DatabaseTransaction) (*rpc.WorldMapChunk, error) {
-	i := x / mapChunkSize
-	j := y / mapChunkSize
+	i, j, _ := getGlobalChunkCoordsForPosition(rpc.Vector2D{X: float32(x), Y: float32(y)}, s.MapChunkSize())
 
-	chunk, err := tx.GetMapChunk(int64(i), int64(j))
+	chunk, err := tx.GetMapChunk(i, j, consts.GlobalChunkNumber)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get chunk from the db: %w", err)
 	}

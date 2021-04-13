@@ -4,7 +4,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"testing"
-	"time"
 )
 
 func TestSimplexTerrainGenerator_GenerateTerrain(t *testing.T) {
@@ -14,7 +13,7 @@ func TestSimplexTerrainGenerator_GenerateTerrain(t *testing.T) {
 		ScaleFactor: 1,
 		Normalize:   true,
 		Debug:       true,
-	}, time.Now().UnixNano())
+	})
 
 	terrain := testGenerator.GenerateTerrain(10, 10, 0, 0)
 	for _, point := range terrain {
@@ -33,7 +32,7 @@ func benchmarkGenerateTerrain(b *testing.B, octaves int, size int) {
 		ScaleFactor: 1,
 		Normalize:   true,
 		Debug:       false,
-	}, time.Now().UnixNano())
+	})
 
 	for i := 0; i < b.N; i++ {
 		testGenerator.GenerateTerrain(size, size, float64(size)*float64(i), float64(size)*float64(i))

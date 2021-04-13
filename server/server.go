@@ -9,7 +9,6 @@ import (
 	"github.com/golang/protobuf/proto"
 	zmq "github.com/pebbe/zmq4"
 	log "github.com/sirupsen/logrus"
-	"time"
 )
 
 type Server struct {
@@ -53,8 +52,16 @@ func NewServer(
 	eventsChan := make(chan model.EventWrapper, 10)
 
 	generatorConfig.Debug = logicConfig.DebugTerrain
+
+	generator := generation.NewSimplexTerrainGenerator(generatorConfig)
+
+	// All settings are the same, but more octaves to get more detailed view
+	generatorConfig.Octaves = generatorConfig.Octaves + 5
+	localGenerator := generation.NewSimplexTerrainGenerator(generatorConfig)
+
 	gameLogic, err := logic.NewLogic(
-		generation.NewSimplexTerrainGenerator(generatorConfig, time.Now().UnixNano()),
+		generator,
+		localGenerator,
 		eventsChan,
 		dbConfig,
 		logicConfig)

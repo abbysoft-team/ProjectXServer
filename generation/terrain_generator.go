@@ -1,14 +1,15 @@
 package generation
 
 import (
-	"math"
-
 	simplex "github.com/ojrac/opensimplex-go"
 	log "github.com/sirupsen/logrus"
+	"math"
+	"time"
 )
 
 type TerrainGenerator interface {
 	GenerateTerrain(width int, height int, offsetX, offsetY float64) []float32
+	Seed() int64
 	SetSeed(seed int64)
 }
 
@@ -22,22 +23,35 @@ type TerrainGeneratorConfig struct {
 	Persistence float64
 	ScaleFactor float64
 	Normalize   bool
+	Seed        int64
 	Debug       bool
 }
 
-func NewSimplexTerrainGenerator(config TerrainGeneratorConfig, seed int64) *SimplexTerrainGenerator {
-	log.WithField("module", "terrain_generator").
+func NewSimplexTerrainGenerator(config TerrainGeneratorConfig) SimplexTerrainGenerator {
+	logger := log.
+		WithField("module", "terrain_generator").
 		WithField("config", config).
-		WithField("seed", seed).
-		Info("Simplex terrain generator initialized")
+		WithField("seed", config.Seed)
 
-	return &SimplexTerrainGenerator{
+	logger.Info("Simplex terrain generator initialized")
+
+	if config.Seed == 0 {
+		config.Seed = time.Now().Unix()
+		log.WithField("seed", config.Seed).Debug("Generated seed")
+	}
+
+	return SimplexTerrainGenerator{
 		config:    config,
-		generator: simplex.New(seed),
+		generator: simplex.New(config.Seed),
 	}
 }
 
-func (s *SimplexTerrainGenerator) SetSeed(seed int64) {
+func (s SimplexTerrainGenerator) Seed() int64 {
+	return s.config.Seed
+}
+
+func (s SimplexTerrainGenerator) SetSeed(seed int64) {
+	s.config.Seed = seed
 	s.generator = simplex.New(seed)
 }
 
@@ -65,7 +79,7 @@ func (s SimplexTerrainGenerator) GenerateTerrain(width, height int, offsetX, off
 					nx := (float64(x) + offsetX) / float64(width)
 					ny := (float64(y) + offsetY) / float64(height)
 
-					noiseVal := s.generator.Eval2(nx*freq, ny*freq)
+					noiseVal := s.generator.Eval2(freq*nx, freq*ny)
 					if s.config.Debug {
 						log.WithFields(log.Fields{
 							"module":    "terrain_generator",

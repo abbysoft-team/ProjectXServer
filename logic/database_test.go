@@ -45,6 +45,11 @@ func (t *TerrainGeneratorMock) GenerateTerrain(width int, height int, offsetX, o
 func (t *TerrainGeneratorMock) SetSeed(seed int64) {
 }
 
+func (t *TerrainGeneratorMock) Seed() int64 {
+	args := t.Called()
+	return args.Get(0).(int64)
+}
+
 type DatabaseTransactionMock struct {
 	mock.Mock
 	isCompleted bool
@@ -191,8 +196,8 @@ func (d *DatabaseTransactionMock) GetChatMessages(offset int, count int) ([]mode
 	panic("implement me")
 }
 
-func (d *DatabaseTransactionMock) GetMapChunk(x, y int64) (model.WorldMapChunk, error) {
-	args := d.Called(x, y)
+func (d *DatabaseTransactionMock) GetMapChunk(x, y, number int64) (model.WorldMapChunk, error) {
+	args := d.Called(x, y, number)
 	return args.Get(0).(model.WorldMapChunk), args.Error(1)
 }
 

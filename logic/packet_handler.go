@@ -165,6 +165,15 @@ func (p *PacketHandler) getHandleFunc(request rpc.Request) *requestHandler {
 				},
 			}, err
 		}
+	} else if request.GetGetLocalMapRequest() != nil {
+		handler.handleFunc = func(s *PlayerSession, r rpc.Request) (rpc.Response, model.Error) {
+			response, err := p.logic.GetLocalMap(s, r.GetGetLocalMapRequest())
+			return rpc.Response{
+				Data: &rpc.Response_GetLocalMapResponse{
+					GetLocalMapResponse: response,
+				},
+			}, err
+		}
 	} else {
 		return nil
 	}

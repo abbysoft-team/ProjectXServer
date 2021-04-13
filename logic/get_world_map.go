@@ -2,6 +2,7 @@ package logic
 
 import (
 	"abbysoft/gardarike-online/model"
+	"abbysoft/gardarike-online/model/consts"
 	rpc "abbysoft/gardarike-online/rpc/generated"
 	"database/sql"
 	"errors"
@@ -85,7 +86,7 @@ func (s *SimpleLogic) GetWorldMap(session *PlayerSession, request *rpc.GetWorldM
 	tx := session.Tx
 	tx.SetAutoRollBack(false)
 
-	chunk, err := tx.GetMapChunk(int64(request.Location.X), int64(request.Location.Y))
+	chunk, err := tx.GetMapChunk(int64(request.Location.X), int64(request.Location.Y), consts.GlobalChunkNumber)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		s.log.WithError(err).Error("Failed to get map chunk")
 		return nil, model.ErrInternalServerError
@@ -110,10 +111,10 @@ func (s *SimpleLogic) GetWorldMap(session *PlayerSession, request *rpc.GetWorldM
 		return nil, model.ErrInternalServerError
 	}
 
-	xStart := int(request.Location.X) * mapChunkSize
-	xEnd := xStart + mapChunkSize
-	yStart := int(request.Location.Y) * mapChunkSize
-	yEnd := yStart + mapChunkSize
+	xStart := int(request.Location.X) * s.MapChunkSize()
+	xEnd := xStart + s.MapChunkSize()
+	yStart := int(request.Location.Y) * s.MapChunkSize()
+	yEnd := yStart + s.MapChunkSize()
 
 	towns, err := tx.GetTownsForRect(xStart, xEnd, yStart, yEnd)
 	if err != nil {
