@@ -110,7 +110,7 @@ func TestSimpleLogic_PlaceTown_PlacingSecondTown(t *testing.T) {
 
 	require.NoError(t, convertErr)
 
-	db.On("GetMapChunk", int64(0), int64(0)).Return(chunk, nil)
+	db.On("GetMapChunk", int64(0), int64(0), int64(consts.GlobalChunkNumber)).Return(chunk, nil)
 
 	request.Location = &rpc.Vector2D{
 		X: 1,

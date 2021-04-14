@@ -2,6 +2,7 @@ package logic
 
 import (
 	"abbysoft/gardarike-online/model"
+	"abbysoft/gardarike-online/model/consts"
 	rpc "abbysoft/gardarike-online/rpc/generated"
 	"database/sql"
 	"github.com/stretchr/testify/assert"
@@ -23,7 +24,7 @@ func TestSimpleLogic_GetWorldMap_GeneratedWhenNoMapIsFound(t *testing.T) {
 	logic.config.AlwaysRegenerateMap = false
 	logic.config.ChunkSize = 10
 
-	db.On("GetMapChunk", int64(0), int64(0)).Return(model.WorldMapChunk{}, sql.ErrNoRows)
+	db.On("GetMapChunk", int64(0), int64(0), int64(consts.GlobalChunkNumber)).Return(model.WorldMapChunk{}, sql.ErrNoRows)
 	db.On("SaveMapChunkOrUpdate", mock.Anything, mock.Anything).Return(nil)
 
 	generator.On("GenerateTerrain", mock.Anything, mock.Anything, mock.Anything, mock.Anything).

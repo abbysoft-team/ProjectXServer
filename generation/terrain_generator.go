@@ -5,7 +5,6 @@ import (
 
 	simplex "github.com/ojrac/opensimplex-go"
 	log "github.com/sirupsen/logrus"
-	"math"
 	"time"
 )
 
