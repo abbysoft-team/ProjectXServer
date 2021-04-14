@@ -290,8 +290,8 @@ func (d *DatabaseTransaction) SaveMapChunkOrUpdate(chunk model.WorldMapChunk) er
 	return d.handleError(err)
 }
 
-func (d *DatabaseTransaction) GetMapChunk(x, y int64) (result model.WorldMapChunk, err error) {
-	err = d.tx.Get(&result, "SELECT * FROM chunks WHERE x=$1 AND y=$2", x, y)
+func (d *DatabaseTransaction) GetMapChunk(x, y, number int64) (result model.WorldMapChunk, err error) {
+	err = d.tx.Get(&result, "SELECT * FROM chunks WHERE x=$1 AND y=$2 AND number=$3", x, y, number)
 	return result, d.handleError(err)
 }
 

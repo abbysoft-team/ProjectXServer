@@ -105,6 +105,7 @@ type ChunkResources struct {
 }
 
 type WorldMapChunk struct {
+	Number int32
 	X      int64
 	Y      int64
 	Width  int32
@@ -117,6 +118,7 @@ type WorldMapChunk struct {
 func NewWorldMapChunkFromRPC(rpcChunk rpc.WorldMapChunk) (WorldMapChunk, error) {
 	var terrain []byte
 	result := WorldMapChunk{
+		Number: 0,
 		X:      int64(rpcChunk.X),
 		Y:      int64(rpcChunk.Y),
 		Width:  rpcChunk.Width,
@@ -168,6 +170,21 @@ func (w WorldMapChunk) ToRPC() (*rpc.WorldMapChunk, error) {
 	}
 
 	return mapChunk, nil
+}
+
+func (w WorldMapChunk) ToLocalRPC() (*rpc.LocalMapChunk, error) {
+	worldChunk, err := w.ToRPC()
+	if err != nil {
+		return nil, err
+	}
+
+	return &rpc.LocalMapChunk{
+		GlobalChunkCoords: &rpc.IntVector2D{X: worldChunk.X, Y: worldChunk.Y},
+		LocalChunkNumber:  w.Number,
+		Data:              worldChunk.Data,
+		Width:             worldChunk.Height,
+		Height:            worldChunk.Width,
+	}, nil
 }
 
 type Character struct {

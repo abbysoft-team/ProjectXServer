@@ -13,10 +13,6 @@ import (
 	"time"
 )
 
-const (
-	mapChunkSize = 100
-)
-
 type Logic interface {
 	GetWorldMap(session *PlayerSession, request *rpc.GetWorldMapRequest) (*rpc.GetWorldMapResponse, model.Error)
 	Login(request *rpc.LoginRequest) (*rpc.LoginResponse, model.Error)
@@ -31,6 +27,7 @@ type Logic interface {
 	PlaceBuilding(session *PlayerSession, request *rpc.PlaceBuildingRequest) (*rpc.PlaceBuildingResponse, model.Error)
 	GetEmpiresRating(session *PlayerSession, request *rpc.GetEmpiresRatingRequest) (*rpc.GetEmpiresRatingResponse, model.Error)
 	RenameTown(session *PlayerSession, request *rpc.RenameTownRequest) (*rpc.RenameTownResponse, model.Error)
+	GetLocalMap(session *PlayerSession, request *rpc.GetLocalMapRequest) (*rpc.GetLocalMapResponse, model.Error)
 }
 
 type SimpleLogic struct {
@@ -40,7 +37,8 @@ type SimpleLogic struct {
 	EventsChan      chan model.EventWrapper
 	config          Config
 	resourceManager ResourceManager
-	generator       generation.TerrainGenerator
+	generator       generation.TerrainGenerator // Generator using to generate global chunks
+	localGenerator  generation.TerrainGenerator // Generator using to generate local chunks
 }
 
 type Config struct {
@@ -52,7 +50,12 @@ type Config struct {
 	DebugTerrain         bool
 }
 
-func NewLogic(generator generation.TerrainGenerator, eventsChan chan model.EventWrapper, dbConfig postgres.Config, config Config) (*SimpleLogic, error) {
+func NewLogic(
+	generator generation.TerrainGenerator,
+	localGenerator generation.TerrainGenerator,
+	eventsChan chan model.EventWrapper,
+	dbConfig postgres.Config,
+	config Config) (*SimpleLogic, error) {
 	logrus.WithFields(logrus.Fields{
 		"module": "logic",
 		"config": config,
@@ -64,12 +67,13 @@ func NewLogic(generator generation.TerrainGenerator, eventsChan chan model.Event
 	}
 
 	logic := &SimpleLogic{
-		db:         database,
-		log:        logrus.WithField("module", "logic"),
-		sessions:   make(map[string]*PlayerSession),
-		EventsChan: eventsChan,
-		config:     config,
-		generator:  generator,
+		db:             database,
+		log:            logrus.WithField("module", "logic"),
+		sessions:       make(map[string]*PlayerSession),
+		EventsChan:     eventsChan,
+		config:         config,
+		generator:      generator,
+		localGenerator: localGenerator,
 	}
 
 	logic.resourceManager = NewResourceManager(logic)
@@ -121,4 +125,8 @@ func (s *SimpleLogic) SelectCharacter(session *PlayerSession, request *rpc.Selec
 	}
 
 	return response, nil
+}
+
+func (s SimpleLogic) MapChunkSize() int {
+	return s.config.ChunkSize
 }

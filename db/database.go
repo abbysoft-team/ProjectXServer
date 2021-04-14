@@ -26,7 +26,7 @@ type AccountDatabaseTransaction interface {
 type WorldDatabaseTransaction interface {
 	AddChatMessage(message model.ChatMessage) (int64, error)
 	GetChatMessages(offset int, count int) ([]model.ChatMessage, error)
-	GetMapChunk(x, y int64) (model.WorldMapChunk, error)
+	GetMapChunk(x, y, number int64) (model.WorldMapChunk, error)
 	GetChunkRange() (model.ChunkRange, error)
 	IncrementMapResources(resources model.ChunkResources, limit model.ChunkResources) error
 	SaveMapChunkOrUpdate(chunk model.WorldMapChunk) error
