@@ -29,6 +29,7 @@ func NewLogicMockWithTerrainGenerator() (*SimpleLogic, *DatabaseTransactionMock,
 	logic, db, session := NewLogicMock()
 	terrainGenerator := &TerrainGeneratorMock{}
 	logic.generator = terrainGenerator
+	logic.localGenerator = terrainGenerator
 
 	return logic, db, session, terrainGenerator
 }
