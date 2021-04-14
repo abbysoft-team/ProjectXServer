@@ -1,6 +1,8 @@
 package generation
 
 import (
+	"math"
+
 	simplex "github.com/ojrac/opensimplex-go"
 	log "github.com/sirupsen/logrus"
 	"math"
